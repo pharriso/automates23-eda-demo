@@ -6,7 +6,7 @@
   tasks:
   - name: create servicenow incident
     servicenow.itsm.incident:
-      short_description: "{{ ansible_eda.event.payload.ProblemID }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.OS_service_name }} is {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.Status }}
+      short_description: "{{ ansible_eda.event.payload.ProblemID }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.OS_service_name }} is {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.Status }}"
       description: "{{ ansible_eda.event.payload.ProblemTitle }}"
     delegate_to: localhost
 

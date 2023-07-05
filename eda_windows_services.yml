@@ -7,4 +7,5 @@
     servicenow.itsm.incident:
       short_description: "{{ ansible_eda.event.payload.ProblemTitle }}"
       description: "{{ ansible_eda.event.payload.ProblemID
+    delegate_to: localhost
 

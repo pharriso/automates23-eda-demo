@@ -3,6 +3,10 @@
 - name: eda windows service management
   hosts: "{{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }}"
   gather_facts: false
+  connection: winrm
+  vars:
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_transport: basic
   tasks:
   - name: create servicenow incident
     servicenow.itsm.incident:
@@ -17,3 +21,15 @@
     ansible.builtin.debug:
       msg: "ServiceNow Incident Number - {{ sn_incident.record.number }}"
 
+  - name: restart windows service
+    ansible.windows.win_service:
+      name: "{{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.OS_service_name }}"
+      state: started
+
+  - name: close servicenow incident
+    servicenow.itsm.incident:
+      state: closed
+      number: "{{ sn_incident.record.number }}"
+      close_code: "Solved (Permanently)"
+      close_notes: "Closed"
+    delegate_to: localhost

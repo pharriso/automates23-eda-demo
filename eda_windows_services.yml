@@ -1,0 +1,10 @@
+---
+
+- name: eda windows service management
+  hosts: "{{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }}"
+  tasks:
+  - name: create servicenow incident
+    servicenow.itsm.incident:
+      short_description: "{{ ansible_eda.event.payload.ProblemTitle }}"
+      description: "{{ ansible_eda.event.payload.ProblemID
+

@@ -11,4 +11,9 @@
       other:
         cmdb_ci: "{{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }}"
     delegate_to: localhost
+    register: sn_incident
+
+  - name: print servicenow incident number
+    ansible.builtin.debug:
+      msg: "ServiceNow Incident Number - {{ sn_incident.record.number }}"
 

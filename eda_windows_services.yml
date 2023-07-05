@@ -7,6 +7,6 @@
   - name: create servicenow incident
     servicenow.itsm.incident:
       short_description: "{{ ansible_eda.event.payload.ProblemTitle }}"
-      description: "{{ ansible_eda.event.payload.ProblemID
+      description: "{{ ansible_eda.event.payload.ProblemID }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }} {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.OS_service_name }}"
     delegate_to: localhost
 

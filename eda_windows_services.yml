@@ -8,5 +8,7 @@
     servicenow.itsm.incident:
       short_description: "{{ ansible_eda.event.payload.ProblemID }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.OS_service_name }} is {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.Status }}"
       description: "{{ ansible_eda.event.payload.ProblemTitle }}"
+      other:
+        cmdb_ci: "{{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }}"
     delegate_to: localhost
 

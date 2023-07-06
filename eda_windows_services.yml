@@ -10,16 +10,33 @@
   tasks:
   - name: create servicenow incident
     servicenow.itsm.incident:
+      caller: eda
       short_description: "{{ ansible_eda.event.payload.ProblemID }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }} - {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.OS_service_name }} is {{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.Status }}"
       description: "{{ ansible_eda.event.payload.ProblemTitle }}"
+      impact: low
+      urgency: low
       other:
         cmdb_ci: "{{ ansible_eda.event.payload.ProblemDetails.rankedEvents[0].customProperties.hostname }}"
     delegate_to: localhost
     register: sn_incident
+    retries: 5
+    delay: 10
+    until: sn_incident is not failed
 
   - name: print servicenow incident number
     ansible.builtin.debug:
       msg: "ServiceNow Incident Number - {{ sn_incident.record.number }}"
+
+  - name: move incident to in_progress
+    servicenow.itsm.incident:
+      number: "{{ sn_incident.record.number }}"
+      state: in_progress
+      other:
+        work_notes: "Event Driven Ansible is investigating"
+    register: update_incident
+    retries: 5
+    delay: 10
+    until: update_incident is not failed
 
   - name: restart windows service
     ansible.windows.win_service:
@@ -28,8 +45,15 @@
 
   - name: close servicenow incident
     servicenow.itsm.incident:
-      state: closed
+      state: resolved
       number: "{{ sn_incident.record.number }}"
       close_code: "Solved (Permanently)"
-      close_notes: "Closed"
+      close_notes: "EDA"
+      caller: eda
+      other:
+        work_notes: "Event Driven Ansible has resolved the incident. Leaving it open for review."
     delegate_to: localhost
+    register: update_incident
+    retries: 5
+    delay: 10
+    until: update_incident is not failed

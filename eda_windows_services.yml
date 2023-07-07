@@ -49,8 +49,8 @@
       state: resolved
       number: "{{ sn_incident.record.number }}"
       close_code: "Solved (Permanently)"
-      close_notes: "EDA"
-      caller: eda
+      close_notes: "Resolved by Event Driven Ansible."
+      caller: admin
       other:
         work_notes: "Event Driven Ansible has resolved the incident. Leaving it open for review."
     delegate_to: localhost
